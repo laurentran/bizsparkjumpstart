@@ -1,0 +1,83 @@
+{
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2014-12-01-preview/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "runworkflowmanually": {
+            "defaultValue": false,
+            "type": "Bool"
+        },
+        "/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/twilioconnector/token": {
+            "defaultValue": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtc25hbWUiOiJFTUEuUmVzb3VyY2VQcm92aWRlciIsImZ1bGxyb3ciOiJhbGwiLCJkYmciOiJCaXpTcGFya0xvZ2ljQXBwMTEyY2I5Mjk4MjFlNGU0NDg2MTA5NDhmMjlmMzI4N2UsMTk4MTY2MjcwNSIsInZlciI6IjMiLCJ1aWQiOiJzaWQ6MTQ1MjU0NzY4OTA2MiIsImlzcyI6InVybjptaWNyb3NvZnQ6d2luZG93cy1henVyZTp6dW1vIiwiYXVkIjoidXJuOm1pY3Jvc29mdDp3aW5kb3dzLWF6dXJlOnp1bW8iLCJuYmYiOjE0NTI1NDc2ODl9.vOz5OhettkjjaUWQ5nUZYRCFXXeLOVfKY_3hfoNo92E",
+            "type": "String",
+            "metadata": {
+                "token": {
+                    "name": "/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/twilioconnector/token"
+                }
+            }
+        },
+        "/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/office365connector/token": {
+            "defaultValue": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJtc25hbWUiOiJFTUEuUmVzb3VyY2VQcm92aWRlciIsImZ1bGxyb3ciOiJhbGwiLCJkYmciOiJCaXpTcGFya0xvZ2ljQXBwMTEyY2I5Mjk4MjFlNGU0NDg2MTA5NDhmMjlmMzI4N2UsMTk4MTY2MjcwNSIsInZlciI6IjMiLCJ1aWQiOiJzaWQ6MTQ1MjU0Nzg5ODk2OSIsImlzcyI6InVybjptaWNyb3NvZnQ6d2luZG93cy1henVyZTp6dW1vIiwiYXVkIjoidXJuOm1pY3Jvc29mdDp3aW5kb3dzLWF6dXJlOnp1bW8iLCJuYmYiOjE0NTI1NDc4OTl9.eRU8jcsZVlkZ6MU0G88xtKaijD2el2hOei-GvlRJq3c",
+            "type": "String",
+            "metadata": {
+                "token": {
+                    "name": "/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/office365connector/token"
+                }
+            }
+        }
+    },
+    "triggers": {
+        "office365connector": {
+            "type": "ApiApp",
+            "inputs": {
+                "apiVersion": "2015-01-14",
+                "host": {
+                    "id": "/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/office365connector",
+                    "gateway": "https://bizsparklogicapp112cb929821e4e448610948f29f3287e.azurewebsites.net"
+                },
+                "operation": "TriggerOnFolder",
+                "parameters": {
+                    "triggerState": "@coalesce(triggers()?.outputs?.body?['triggerState'], '')",
+                    "folder": "Inbox",
+                    "from": "lauren.tran.161@gmail.com"
+                },
+                "authentication": {
+                    "type": "Raw",
+                    "scheme": "Zumo",
+                    "parameter": "@parameters('/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/office365connector/token')"
+                }
+            },
+            "recurrence": {
+                "frequency": "Minute",
+                "interval": 1
+            },
+            "conditions": []
+        }
+    },
+    "actions": {
+        "office365connector0": {
+            "type": "ApiApp",
+            "inputs": {
+                "apiVersion": "2015-01-14",
+                "host": {
+                    "id": "/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/office365connector",
+                    "gateway": "https://bizsparklogicapp112cb929821e4e448610948f29f3287e.azurewebsites.net"
+                },
+                "operation": "ReplyTo",
+                "parameters": {
+                    "messageId": "@{triggers().outputs.body.Id}",
+                    "comment": {
+                        "Comment": "Hi there! Thanks for reaching out.  To get started, are you already a BizSpark member?  If not, please sign up for BizSpark at http://aka.ms/bizsparkapproved, and let me know once you've registered! Thanks! Lauren"
+                    },
+                    "replyAll": true
+                },
+                "authentication": {
+                    "type": "Raw",
+                    "scheme": "Zumo",
+                    "parameter": "@parameters('/subscriptions/112cb929-821e-4e44-8610-948f29f3287e/resourcegroups/bizsparklogicapp/providers/Microsoft.AppService/apiapps/office365connector/token')"
+                }
+            },
+            "conditions": []
+        }
+    },
+    "outputs": {}
+}
